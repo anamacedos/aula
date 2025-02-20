@@ -10,24 +10,24 @@ const {PrismaClient} = require ('@prisma/client')
 //Fucao para inserir no Banco de Dados um novo jogo
 const insertJogo = async function(jogo){ 
     //instancia da classe do prisma client para gerar um objeto
-    const prisma = newPrismaClient()
+    const prisma = new PrismaClient()
 
-    let sql = `insert in tbl_jogo(
+    let sql = `insert into tbl_jogo(
                                     nome,
                                     data_lancamento,
                                     versao,
                                     tamanho,
                                     descricao,
-                                    foto_capa
+                                    foto_capa,
                                     link
     )values(
-        ${jogo.nome},
-        ${jogo.data_lancamento},
-        ${jogo.versao},
-        ${jogo.tamanho},
-        ${jogo.descricao},
-        ${jogo.foto_capa},
-        ${jogo.link}
+        '${jogo.nome}',
+        '${jogo.data_lancamento}',
+        '${jogo.versao}',
+        '${jogo.tamanho}',
+        '${jogo.descricao}',
+        '${jogo.foto_capa}',
+        '${jogo.link}'
     )`
     //executa o script sql no banco de dados e aguarda o retorno do banco
     //so pode ter await em uma funcao se ela for async, e ela so pode ser async se ela precisa fazer uma requisicao que esta em outro servidor
