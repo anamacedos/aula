@@ -39,17 +39,37 @@ app.use((request, response, next) => {
 //end ponit para inserir um jogo no banco de dados
 app.post('/v1/controle-jogos/jogo', cors(), bodyParserJSON, async function(request, response){
 
+        //console.log(request.headers) //printa o cabeçalho (header), com as informações da requisição, como quem pediu e também o formato da requisição (content-type)
+
+        //recebe o content type para validar o tipo de dados da requisição
+        let contentType = request.headers['content-type']
+
         //recebe o conteudos do body da requisição
         let dadosBody = request.body
 
         //Ecaminhando os dados da requisição para controller inserir no BD
-        let resultJogo = await controllerJgo.insertJogo(dadosBody)
+        let resultJogo = await controllerJgo.insertJogo(dadosBody, contentType)
 
         response.status(resultJogo.status_code)
         response.json(resultJogo)
 
 
 })
+
+//controle para retornar uma lista de jogos
+app.get('/v1/controle-jogos/jogo', cors(), async function(request, response){
+        //chama a função para listar os jogos
+        let resultJogo = await controllerJgo.listarJogo()
+
+        response.status(resultJogo.status_code)
+        response.json(resultJogo)
+
+})
+
+app.get('/v1/controle-jogos/jogo:id', cors(), async function(request, response){
+        let resultJogo
+})
+
 
 app.listen(8080, function(){
         console.log('API aguardando requisições')

@@ -8,7 +8,11 @@ const MESSAGE = require('../../modulo/config.js')
 const jogoDAO = require('../../model/DAO/jogo.js')
 
 //Funcao para inserir um novo jogo
-const insertJogo = async function (jogo) {
+const insertJogo = async function (jogo, contentType) {
+    try {
+        if (contentType == 'application/json'){
+        
+    
     if(jogo.nome == undefined || jogo.nome == "" || jogo.nome == null || jogo.nome.lenght > 80 ||
         jogo.data_lancamento == undefined || jogo.data_lancamento == "" || jogo.data_lancamento == null || jogo.data_lancamento.lenght > 10 ||
         jogo.versao == undefined || jogo.versao == "" || jogo.versao == null || jogo.versao.lenght > 10 ||
@@ -26,8 +30,14 @@ const insertJogo = async function (jogo) {
         if(resultJogo)
             return MESSAGE.SUCESS_CREATED_ITEM //201
         else
-            return MESSAGE.ERROR_INTERNAL_SERVER //500
+            return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
     }
+    }else{
+        return MESSAGE.ERROR_CONTENT_TYPE //415
+    }
+} catch (error) {
+        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
+}
 }
 
 
@@ -43,11 +53,67 @@ const excluirJogo = async function () {
 
 //Funcao para retornar todos os jogos
 const listarJogo = async function () {
+
+try {
+    let dadosJogos = {}
+        //chama a função para retornar os dados do jogo
+        let resultJogo = await jogoDAO.selectAllJogo()
+
+        if (resultJogo != false){
+
+            if (resultJogo.length > 0 || typeof(resultJogo) == 'object'){
+
+                //cria um objeto do tipo json para retornar a lista de jogos
+                dadosJogos.status = true
+                dadosJogos.status_code = 200
+                dadosJogos.items = resultJogo.length
+                dadosJogos.games = resultJogo
+                return dadosJogos
+            }else{
+                return MESSAGE.ERROR_NOT_FOUND
+
+            }
+        }else{
+            return MESSAGE.ERROR_INTERNAL_SERVER_MODEL
+        }
+    
+} catch (error) {
+    return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
+    
+}
     
 }
 
 //Funcao para buscar um jogo 
-const buscarJogo = async function () {
+const buscarJogo = async function (id) {
+    try {
+        let resultJogo = await jogoDAO.selectByIdJogo()
+        
+        if (resultJogo != false){
+
+            if (resultJogo.length > 0 || typeof(resultJogo) == 'object'){
+
+                //cria um objeto do tipo json para retornar a lista de jogos
+                dadosJogos.status = true
+                dadosJogos.status_code = 200
+                dadosJogos.items = resultJogo.length
+                dadosJogos.games = resultJogo
+                return dadosJogos
+            }else{
+                return MESSAGE.ERROR_NOT_FOUND
+
+            }
+        }else{
+            return MESSAGE.ERROR_INTERNAL_SERVER_MODEL
+        }
+
+        
+    } catch (error) {
+        
+    }
+    
+
+
     
 }
 

@@ -8,9 +8,14 @@
 const {PrismaClient} = require ('@prisma/client')
 
 //Fucao para inserir no Banco de Dados um novo jogo
+
+//instancia da classe do prisma client para gerar um objeto
+const prisma = new PrismaClient()
+
 const insertJogo = async function(jogo){ 
-    //instancia da classe do prisma client para gerar um objeto
-    const prisma = new PrismaClient()
+    try {
+        
+    
 
     let sql = `insert into tbl_jogo(
                                     nome,
@@ -37,6 +42,9 @@ const insertJogo = async function(jogo){
         return true
     else
         return false
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 //Funcao para atualizar no Bnac de Dados um jogo existente
@@ -50,12 +58,42 @@ const deleteJogo = async function () {
 }
 
 //Funcao para retornar do banco de dados uma lista jogos
-const selectAllJogo = async function () {
-    
+const selectAllJogo = async function (id) {
+    try {
+
+        //script sql para retornar os dados do BD
+        let sql = `select * from tbl_jogo order by id desc ${id}`
+        //para fazer select é o query, para insert, update ou delete é o execute
+
+        //Executa o script SQL e aguarda o retorno dos dados
+        let result = await prisma.$queryRawUnsafe(sql)
+
+        if (result)
+            return result //no select nao é return true pq tem que retornar os dados, por isso o result
+        else
+            return false
+
+        
+    } catch (error) {
+        return false
+    }
 }
 
 //Funcao para buscar no banco de dados um jogo pelo id
 const selectByIdJogo = async function () {
+    try {
+        let sql = 'select from tbl_jogo where id = '
+
+        let result = await prisma.$queryRawUnsafe(sql)
+
+        if (result)
+            return result
+        else
+            return false
+        
+    } catch (error) {
+        return false
+    }
     
 }
 
