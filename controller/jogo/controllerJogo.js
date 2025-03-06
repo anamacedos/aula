@@ -47,7 +47,28 @@ const atualizarJogo = async function () {
 }
 
 //Funcao para excluir um jogo
-const excluirJogo = async function () {
+const excluirJogo = async function (id) {
+try {
+    let dadosJogos = {}
+    let resultJogo = await jogoDAO.deleteJogo(id)
+
+    if(resultJogo != false){
+        if(resultJogo.length > 0 || typeof(resultJogo) == 'object'){
+            dadosJogos.status = true
+            dadosJogos.status_code = 200
+            dadosJogos.items = resultJogo.length
+            dadosJogos.games = resultJogo
+            return dadosJogos
+        }else{
+            return MESSAGE.ERROR_NOT_FOUND
+        }
+    }else{
+        return MESSAGE.ERROR_INTERNAL_SERVER_MODEL
+    }
+} catch (error) {
+    console.log(error)
+    
+}
     
 }
 
@@ -84,10 +105,11 @@ try {
     
 }
 
-//Funcao para buscar um jogo 
-const buscarJogo = async function (id) {
+//Funcao para buscar um jogo pelo id
+const buscarJogo = async function(id){
     try {
-        let resultJogo = await jogoDAO.selectByIdJogo()
+        let dadosJogos = {}
+        let resultJogo = await jogoDAO.selectByIdJogo(id)
         
         if (resultJogo != false){
 
@@ -109,6 +131,8 @@ const buscarJogo = async function (id) {
 
         
     } catch (error) {
+        console.log(error)
+        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
         
     }
     

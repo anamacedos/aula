@@ -53,7 +53,19 @@ const updateJogo = async function () {
 }
 
 //Funcao para excluir no banco de dados um jogo existente
-const deleteJogo = async function () {
+const deleteJogo = async function (id) {
+    try {
+        let sql = `delete * from tbl_jogo where id = ${id}`
+        let result = await prisma.$queryRawUnsafe(sql)
+
+        if (result)
+            return result
+        else
+            return false
+    } catch (error) {
+        return false
+    }
+    
     
 }
 
@@ -80,9 +92,10 @@ const selectAllJogo = async function (id) {
 }
 
 //Funcao para buscar no banco de dados um jogo pelo id
-const selectByIdJogo = async function () {
+const selectByIdJogo = async function(id){
     try {
-        let sql = 'select from tbl_jogo where id = '
+        let sql = `select * from tbl_jogo where id = ${id}`
+
 
         let result = await prisma.$queryRawUnsafe(sql)
 

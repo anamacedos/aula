@@ -66,11 +66,24 @@ app.get('/v1/controle-jogos/jogo', cors(), async function(request, response){
 
 })
 
-app.get('/v1/controle-jogos/jogo:id', cors(), async function(request, response){
-        let resultJogo
+//endponit para retornar um jogo com base no seu id
+app.get('/v1/controle-jogos/jogo/:id', cors(), async function(request, response){
+        let id = request.params.id
+        let resultJogo = await controllerJgo.buscarJogo(id)
+
+        response.status(resultJogo.status_code)
+        response.json(resultJogo)
+})
+
+app.delete('/v1/controle-jogos/deletjogo/:id', cors(), async function(request, response){
+        let id = request.params.id
+        let resultJogo = await controllerJgo.excluirJogo(id)
+
+        response.status(resultJogo.status_code)
+        response.json(resultJogo)
 })
 
 
-app.listen(8080, function(){
+app.listen(3030, function(){
         console.log('API aguardando requisições')
 })
