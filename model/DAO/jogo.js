@@ -48,18 +48,37 @@ const insertJogo = async function(jogo){
 }
 
 //Funcao para atualizar no Bnac de Dados um jogo existente
-const updateJogo = async function () {
+const updateJogo = async function (jogo) {
+    try {
+        let sql = `update tbl jogo set nome = '${jogo.nome}',
+                                    data_lancamento = "${jogo.data_lancamento}",
+                                    versao = "${jogo.versao}",
+                                    tamanho = "${jogo.tamanho}",
+                                    descricao = "${jogo.descricao}",
+                                    foto_capa = "${jogo.foto_capa}",
+                                    link = "${jogo.link}"
+                                    where id = ${jogo.id}`
+        let result = await prisma.$executeRawUnsafe
+        
+        if(result)
+            return true
+        else
+            returnfalse
+        
+    } catch (error) {
+        return false
+    }
     
 }
 
 //Funcao para excluir no banco de dados um jogo existente
 const deleteJogo = async function (id) {
     try {
-        let sql = `delete * from tbl_jogo where id = ${id}`
-        let result = await prisma.$queryRawUnsafe(sql)
+        let sql = `delete from tbl_jogo where id = ${id}`
+        let result = await prisma.$executeRawUnsafe(sql)  //query é para select com retornos de dados, e execute quando não tem retorno, no max dixendo se deu certo ou errado
 
         if (result)
-            return result
+            return true
         else
             return false
     } catch (error) {
@@ -70,11 +89,11 @@ const deleteJogo = async function (id) {
 }
 
 //Funcao para retornar do banco de dados uma lista jogos
-const selectAllJogo = async function (id) {
+const selectAllJogo = async function () {
     try {
 
         //script sql para retornar os dados do BD
-        let sql = `select * from tbl_jogo order by id desc ${id}`
+        let sql = `select * from tbl_jogo order by id desc`
         //para fazer select é o query, para insert, update ou delete é o execute
 
         //Executa o script SQL e aguarda o retorno dos dados

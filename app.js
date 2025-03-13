@@ -68,22 +68,40 @@ app.get('/v1/controle-jogos/jogo', cors(), async function(request, response){
 
 //endponit para retornar um jogo com base no seu id
 app.get('/v1/controle-jogos/jogo/:id', cors(), async function(request, response){
-        let id = request.params.id
-        let resultJogo = await controllerJgo.buscarJogo(id)
+        //recebe o id do jogo na requisição
+        let idJogo = request.params.id
+        let resultJogo = await controllerJgo.buscarJogo(idJogo)
 
         response.status(resultJogo.status_code)
         response.json(resultJogo)
 })
 
+
+//endpoint para ecluir um jogo com base no seu id
 app.delete('/v1/controle-jogos/deletjogo/:id', cors(), async function(request, response){
-        let id = request.params.id
-        let resultJogo = await controllerJgo.excluirJogo(id)
+        let idJogo = request.params.id
+        let resultJogo = await controllerJgo.excluirJogo(idJogo)
+
+        response.status(resultJogo.status_code)
+        response.json(resultJogo)
+})
+
+app.put('/v1/controle-jogos/jogo/:id', cors(), bodyParserJSON, async function(request, response){ //post e put é necessario o bodyparserJson, pois sao os 2 verbos que chegam dados pelo corpo
+
+        //recebe o content type da requisição
+        let contentType = request.headers['content-type']
+        //recebe o id do jogo
+        let idJogo = request.params.id
+        //recebe os dados do jogo encaminhado do body da requisição
+        let dadosBody = request.body 
+
+        let resultJogo = await controllerJgo.atualizarJogo(dadosBody, idJogo, contentType)
 
         response.status(resultJogo.status_code)
         response.json(resultJogo)
 })
 
 
-app.listen(3030, function(){
+app.listen(8080, function(){
         console.log('API aguardando requisições')
 })
