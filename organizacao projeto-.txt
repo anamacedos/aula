@@ -1,0 +1,17 @@
+
+tabelas que já pode criar no banco
+sexo (criada)
+plataforma (criada)
+idioma (criada)
+classificação (criada)
+categoria (criada)
+
+tabelas que já pode fazer o crud
+sexo 
+	insert-> inserir um novo sexo no banco (voltando html no postman)
+	get -> listar todos os sexos (necessário concertar o insert para testar)
+	get -> listar sexo atarves do id (já fiz o dao, parei na controler)
+plataforma (criada)
+idioma (criada)
+classificação (criada)
+categoria 

@@ -21,6 +21,7 @@ const express = require('express')
 const cors = require('cors')
 const bodyParser = require ('body-parser')
 const controllerJgo = require("./controller/jogo/controllerJogo.js")
+const controllerSexo = require('./controller/jogo/controllerSexo.js')
 
 //estaelecendo o formato de dados que deverá chegar no body da requisição (post ou put)
 const bodyParserJSON = bodyParser.json()
@@ -56,6 +57,7 @@ app.post('/v1/controle-jogos/jogo', cors(), bodyParserJSON, async function(reque
 
 })
 
+
 //controle para retornar uma lista de jogos
 app.get('/v1/controle-jogos/jogo', cors(), async function(request, response){
         //chama a função para listar os jogos
@@ -64,6 +66,15 @@ app.get('/v1/controle-jogos/jogo', cors(), async function(request, response){
         response.status(resultJogo.status_code)
         response.json(resultJogo)
 
+})
+
+//end point para listar todos os sexos
+app.get('/v1/controle-jogos/sexos', cors(), async function(request, response){
+        //chama a função para listar os sexos
+
+        let resultSexo = await controllerSexo.listarSexo()
+        response.status(resultSexo.status_code)
+        response.json(resultSexo)
 })
 
 //endponit para retornar um jogo com base no seu id
@@ -86,6 +97,7 @@ app.delete('/v1/controle-jogos/deletjogo/:id', cors(), async function(request, r
         response.json(resultJogo)
 })
 
+//end point para atualizar o jogo
 app.put('/v1/controle-jogos/jogo/:id', cors(), bodyParserJSON, async function(request, response){ //post e put é necessario o bodyparserJson, pois sao os 2 verbos que chegam dados pelo corpo
 
         //recebe o content type da requisição
@@ -100,6 +112,25 @@ app.put('/v1/controle-jogos/jogo/:id', cors(), bodyParserJSON, async function(re
         response.status(resultJogo.status_code)
         response.json(resultJogo)
 })
+
+/*****************************************************************
+ * Tabela de sexo
+*****************************************************************/
+//end point para inserir um novo sexo no banco de dados
+app.post('v1/controle-jogos/sexo', cors(), bodyParserJSON, async function(request, response){
+        //recebe o content type para validar o tipo de dados da requisição
+        let contentType = request.headers['content-type']
+        //recebe os conteudos do body da requisição
+        let dadosBody = request.body
+        //Encaminhando os dados da requisição para controller inserir no BD
+        let resultSexo = await controllerSexo.insertSexo(dadosBody, contentType)
+
+        response.status(resultSexo.status_code)
+        response.json(resultSexo)
+})
+
+
+
 
 
 app.listen(8080, function(){

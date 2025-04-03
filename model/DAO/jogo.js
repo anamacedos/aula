@@ -7,11 +7,10 @@
 //Import da biblioteca do prisma client para executar scripts no banco de dados
 const {PrismaClient} = require ('@prisma/client')
 
-//Fucao para inserir no Banco de Dados um novo jogo
-
 //instancia da classe do prisma client para gerar um objeto
 const prisma = new PrismaClient()
 
+//Fucao para inserir no Banco de Dados um novo jogo
 const insertJogo = async function(jogo){ 
     try {
         
@@ -47,7 +46,7 @@ const insertJogo = async function(jogo){
     }
 }
 
-//Funcao para atualizar no Bnac de Dados um jogo existente
+//Funcao para atualizar no Banco de Dados um jogo existente
 const updateJogo = async function (jogo) {
     try {
         let sql = `update tbl jogo set nome = '${jogo.nome}',
