@@ -69,9 +69,57 @@ const buscarSexo = async function(id){
             let resultSexo = await sexoDAO.selectByIdsexo(parseInt(id))
 
             if (resultSexo != false){
-                if(resultSexo.length > 0 || typeof(resultSexo))
+                if(resultSexo.length > 0 || typeof(resultSexo) == 'object'){
+                    //cria um objeto do tipo json para retornar a lista de jogos (o jogo)
+                    dadosSexo.status = true
+                    dadosSexo.status_code = 200
+                    dadosSexo.sexo = resultSexo
+
+                    return dadosSexo
+                }else{
+                    return MESSAGE.ERROR_NOT_FOUND
+                }
+            }else{
+                return MESSAGE.ERROR_INTERNAL_SERVER_MODEL
             }
         }
+    } catch (error) {
+        console.log(error)
+        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
+}
+
+//Função para deletar um sexo
+const deleteSexo = async function(id){
+    try {
+        if(id == "" || id == undefined || id == null || isNaN(id) || id<=0){
+            return MESSAGE.ERROR_REQUIRED_FIELDS
+            }else{
+                let resultSexo = await sexoDAO.selectByIdsexo(parseInt(id))
+                if(resultSexo != false || typeof resultSexo == 'object'){
+                    if(resultSexo.length > 0 ){
+                        let result = await sexoDAO.deleteSexo(id)
+
+                        if(result)
+                            return MESSAGE.SUCESS_DELETED_ITEM
+                        else
+                            return MESSAGE.ERROR_INTERNAL_SERVER_MODEL
+                    }else{
+                        return MESSAGE.ERROR_NOT_FOUND
+                    }
+                }else{
+                    return MESSAGE.ERROR_INTERNAL_SERVER_MODEL
+                }
+            }
+    } catch (error) {
+        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
+}
+
+//Função para atualizar um sexo
+const updateSexo = async function(jogo, id, contentType){
+    try {
+        
     } catch (error) {
         
     }
@@ -79,5 +127,7 @@ const buscarSexo = async function(id){
 
 module.exports = {
     insertSexo,
-    listarSexo
+    listarSexo,
+    buscarSexo,
+    deleteSexo
 }

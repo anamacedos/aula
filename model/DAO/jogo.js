@@ -49,7 +49,7 @@ const insertJogo = async function(jogo){
 //Funcao para atualizar no Banco de Dados um jogo existente
 const updateJogo = async function (jogo) {
     try {
-        let sql = `update tbl jogo set nome = '${jogo.nome}',
+        let sql = `update tbl_jogo set nome = '${jogo.nome}',
                                     data_lancamento = "${jogo.data_lancamento}",
                                     versao = "${jogo.versao}",
                                     tamanho = "${jogo.tamanho}",
@@ -57,7 +57,7 @@ const updateJogo = async function (jogo) {
                                     foto_capa = "${jogo.foto_capa}",
                                     link = "${jogo.link}"
                                     where id = ${jogo.id}`
-        let result = await prisma.$executeRawUnsafe
+        let result = await prisma.$executeRawUnsafe(sql)
         
         if(result)
             return true
@@ -65,6 +65,7 @@ const updateJogo = async function (jogo) {
             returnfalse
         
     } catch (error) {
+        console.log(error)
         return false
     }
     

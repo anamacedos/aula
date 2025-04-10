@@ -68,14 +68,7 @@ app.get('/v1/controle-jogos/jogo', cors(), async function(request, response){
 
 })
 
-//end point para listar todos os sexos
-app.get('/v1/controle-jogos/sexos', cors(), async function(request, response){
-        //chama a função para listar os sexos
 
-        let resultSexo = await controllerSexo.listarSexo()
-        response.status(resultSexo.status_code)
-        response.json(resultSexo)
-})
 
 //endponit para retornar um jogo com base no seu id
 app.get('/v1/controle-jogos/jogo/:id', cors(), async function(request, response){
@@ -117,7 +110,7 @@ app.put('/v1/controle-jogos/jogo/:id', cors(), bodyParserJSON, async function(re
  * Tabela de sexo
 *****************************************************************/
 //end point para inserir um novo sexo no banco de dados
-app.post('v1/controle-jogos/sexo', cors(), bodyParserJSON, async function(request, response){
+app.post('/v1/controle-jogos/sexo', cors(), bodyParserJSON, async function(request, response){
         //recebe o content type para validar o tipo de dados da requisição
         let contentType = request.headers['content-type']
         //recebe os conteudos do body da requisição
@@ -126,6 +119,34 @@ app.post('v1/controle-jogos/sexo', cors(), bodyParserJSON, async function(reques
         let resultSexo = await controllerSexo.insertSexo(dadosBody, contentType)
 
         response.status(resultSexo.status_code)
+        response.json(resultSexo)
+})
+
+//end point para listar todos os sexos
+app.get('/v1/controle-jogos/sexos', cors(), async function(request, response){
+        //chama a função para listar os sexos
+
+        let resultSexo = await controllerSexo.listarSexo()
+        response.status(resultSexo.status_code)
+        response.json(resultSexo)
+})
+
+//endpoint parar retornar um sexo com base no seu id
+app.get('/v1/controle-jogos/sexo:id', cors(), async function(request, response){
+        //recebe o id do sexo na requisição
+        let idSexo = request.params.id
+        let resultSexo = await controllerSexo.buscarSexo(idSexo)
+
+        response.status(resultSexo.status_code)
+        response.json(resultSexo)
+})
+
+//end point para deletar um jogo com base no seu id
+app.delete('/v1/controle-jogos/deletsexo/:id', cors(), async function(request, response){
+        let idSexo = request.params.id
+        let resultSexo = await controllerSexo.deleteSexo(idSexo)
+
+        response.status(resultJogo.status_code)
         response.json(resultSexo)
 })
 

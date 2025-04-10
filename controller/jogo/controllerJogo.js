@@ -87,41 +87,26 @@ const atualizarJogo = async function (jogo, id, contentType) {
 //Funcao para excluir um jogo
 const excluirJogo = async function (id) {
 try { 
-    if(id == "" || id == undefined || id == null || isNaN(id) || is<=0){
+    if(id == "" || id == undefined || id == null || isNaN(id) || id<=0){
     return MESSAGE.ERROR_REQUIRED_FIELDS
     }else{
-        // let resultJogo = await jogoDAO.selectByIdJogo(id)
-        let resultJogo = await buscarJogo(parseInt(id))
+        let resultJogo = await jogoDAO.selectByIdJogo(parseInt(id))
 
-        if(resultJogo.status_code == 200){
-            let result = await jogoDAO.deleteJogo(parseInt(id))
-            if (result){
-                return MESSAGE.SUCESS_DELETED_ITEM
+        if(resultJogo != false || typeof resultJogo == 'object'){
+            if(resultJogo.length > 0){
+                let result = await jogoDAO.deleteJogo(id)
+
+                if(result)
+                    return MESSAGE.SUCESS_DELETED_ITEM
+                else
+                    MESSAGE.ERROR_INTERNAL_SERVER_MODEL
             }else{
-                return MESSAGE.ERROR_INTERNAL_SERVER_MODEL
+                return MESSAGE.ERROR_NOT_FOUND
             }
-        }else if(resultJogo.status_code == 404){
-            return MESSAGE.ERROR_NOT_FOUND
         }else{
-            return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
+            return MESSAGE.ERROR_INTERNAL_SERVER_MODEL
         }
     }
-    // let dadosJogos = {}
-    // let resultJogo = await jogoDAO.deleteJogo(id)
-
-    // if(resultJogo != false){
-    //     if(resultJogo.length > 0 || typeof(resultJogo) == 'object'){
-    //         dadosJogos.status = true
-    //         dadosJogos.status_code = 200
-    //         dadosJogos.items = resultJogo.length
-    //         dadosJogos.games = resultJogo
-    //         return dadosJogos
-    //     }else{
-    //         return MESSAGE.ERROR_NOT_FOUND
-    //     }
-    // }else{
-    //     return MESSAGE.ERROR_INTERNAL_SERVER_MODEL
-    // }
 } catch (error) {
     return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER 
 }

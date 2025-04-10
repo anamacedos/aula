@@ -38,4 +38,4 @@ create table tbl_categoria(
 
 show tables;
 
-desc tbl_jogo;
+desc tbl_sexo;

@@ -18,16 +18,17 @@ const prisma = new PrismaClient()
 const insertSexo = async function(sexo){
     try {
         let sql = `insert into tbl_sexo(
-        sexo
+                                        sexo
         )values(
-        '${sexo.sexo}'
+                '${sexo.sexo}'
         )`
 
         let result = await prisma.$executeRawUnsafe(sql)
 
         if(result)
             return true
-        else return false
+        else 
+            return false
     } catch (error) {
         console.log(error)
     }
@@ -62,8 +63,40 @@ const selectByIdsexo = async function(id){
     }
 }
 
+//Função para deletar no banco um sexo
+const deleteSexo = async function(id){
+    try {
+        let sql = `delete from tbl_sexo where id = ${id}`
+        let result = await prisma.$executeRawUnsafe(sql)
+
+        if (result)
+            return true
+        else 
+            return false
+    } catch (error) {
+        return false
+    }
+}
+
+//Função para atualizar no banco um sexo
+const updateSexo = async function(jogo){
+    try {
+        let sql = `update tbl_sexo set sexo = ${sexo.sexo}`
+        let result = prisma.$executeRawUnsafe(sql)
+        if(result)
+            return true
+        else 
+            return false
+    } catch (error) {
+        console.log(error)
+        return false
+    }
+}
+
 module.exports = {
     insertSexo,
     selectAllSexo,
-    selectByIdsexo
+    selectByIdsexo,
+    deleteSexo,
+    updateSexo
 }
