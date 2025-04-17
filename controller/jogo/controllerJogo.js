@@ -86,30 +86,30 @@ const atualizarJogo = async function (jogo, id, contentType) {
 
 //Funcao para excluir um jogo
 const excluirJogo = async function (id) {
-try { 
-    if(id == "" || id == undefined || id == null || isNaN(id) || id<=0){
-    return MESSAGE.ERROR_REQUIRED_FIELDS
-    }else{
-        let resultJogo = await jogoDAO.selectByIdJogo(parseInt(id))
-
-        if(resultJogo != false || typeof resultJogo == 'object'){
-            if(resultJogo.length > 0){
-                let result = await jogoDAO.deleteJogo(id)
-
-                if(result)
-                    return MESSAGE.SUCESS_DELETED_ITEM
-                else
-                    MESSAGE.ERROR_INTERNAL_SERVER_MODEL
-            }else{
-                return MESSAGE.ERROR_NOT_FOUND
-            }
+    try { 
+        if(id == "" || id == undefined || id == null || isNaN(id) || id<=0){
+        return MESSAGE.ERROR_REQUIRED_FIELDS
         }else{
-            return MESSAGE.ERROR_INTERNAL_SERVER_MODEL
+            let resultJogo = await jogoDAO.selectByIdJogo(parseInt(id))
+
+            if(resultJogo != false || typeof resultJogo == 'object'){
+                if(resultJogo.length > 0){
+                    let result = await jogoDAO.deleteJogo(id)
+
+                    if(result)
+                        return MESSAGE.SUCESS_DELETED_ITEM
+                    else
+                        return MESSAGE.ERROR_INTERNAL_SERVER_MODEL
+                }else{
+                    return MESSAGE.ERROR_NOT_FOUND
+                }
+            }else{
+                return MESSAGE.ERROR_INTERNAL_SERVER_MODEL
+            }
         }
+    } catch (error) {
+        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER 
     }
-} catch (error) {
-    return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER 
-}
     
 }
 

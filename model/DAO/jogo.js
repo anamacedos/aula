@@ -62,7 +62,7 @@ const updateJogo = async function (jogo) {
         if(result)
             return true
         else
-            returnfalse
+            return false
         
     } catch (error) {
         console.log(error)

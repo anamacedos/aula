@@ -6,7 +6,6 @@
  ********************************************************************************/
 //Import da biblioteca do prisma client para executar scripts no banco de dados
 const {PrismaClient} = require ('@prisma/client')
-const { selectAllJogo } = require('./jogo')
 
 //Fucao para inserir no Banco de Dados um novo jogo
 
@@ -79,9 +78,9 @@ const deleteSexo = async function(id){
 }
 
 //Função para atualizar no banco um sexo
-const updateSexo = async function(jogo){
+const updateSexo = async function(sexo){
     try {
-        let sql = `update tbl_sexo set sexo = ${sexo.sexo}`
+        let sql = `update tbl_sexo set sexo = ${sexo.sexo} where id = ${sexo.id}`
         let result = prisma.$executeRawUnsafe(sql)
         if(result)
             return true

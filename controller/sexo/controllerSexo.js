@@ -6,8 +6,6 @@
  ********************************************************************************/
 const MESSAGE = require('../../modulo/config.js')
 const sexoDAO = require('../../model/DAO/sexo.js')
-const { application } = require('express')
-const { json } = require('body-parser')
 
 //Função para inserir um novo sexo
 const insertSexo = async function (sexo, contentType){
@@ -117,11 +115,34 @@ const deleteSexo = async function(id){
 }
 
 //Função para atualizar um sexo
-const updateSexo = async function(jogo, id, contentType){
+const updateSexo = async function(sexo, id, contentType){
     try {
-        
+        if(contentType == 'application/json'){
+            if(sexo.sexo == undefined || sexo.sexo == null || sexo.sexo == "" || sexo.sexo.lenght > 15){
+                return MESSAGE.ERROR_REQUIRED_FIELDS
+            }else{
+                //validar se o id existe no banco
+                let resultSexo = await buscarSexo(parseInt(id))
+                if(resultSexo.status_code == 200){
+                    //adiciona o atributo id no json para encaminhar o id da requisição
+                    sexo.id = parseInt(id)
+                    let result = await sexoDAO.updateSexo(sexo)
+
+                    if(result)
+                        return MESSAGE.SUCESS_UPDATED_ITEM
+                    else
+                        return MESSAGE.ERROR_INTERNAL_SERVER_MODEL
+                }else if(resultSexo.status_code == 404){
+                    return MESSAGE.ERROR_NOT_FOUND
+                }else{
+                    return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
+                }
+            }
+        }else{
+            return MESSAGE.ERROR_CONTENT_TYPE
+        }
     } catch (error) {
-        
+        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
 
@@ -129,5 +150,6 @@ module.exports = {
     insertSexo,
     listarSexo,
     buscarSexo,
-    deleteSexo
+    deleteSexo,
+    updateSexo
 }

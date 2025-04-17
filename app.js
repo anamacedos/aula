@@ -21,7 +21,9 @@ const express = require('express')
 const cors = require('cors')
 const bodyParser = require ('body-parser')
 const controllerJgo = require("./controller/jogo/controllerJogo.js")
-const controllerSexo = require('./controller/jogo/controllerSexo.js')
+const controllerSexo = require('./controller/sexo/controllerSexo.js')
+const controllerCategoria = require('./controller/categoria/controllerCategoria.js')
+const controllerPlataforma = require('./controller/plataforma/controllerplataforma.js')
 
 //estaelecendo o formato de dados que deverá chegar no body da requisição (post ou put)
 const bodyParserJSON = bodyParser.json()
@@ -37,6 +39,10 @@ app.use((request, response, next) => {
         app.use(cors())
         next()
 })
+
+
+
+
 //end ponit para inserir um jogo no banco de dados
 app.post('/v1/controle-jogos/jogo', cors(), bodyParserJSON, async function(request, response){
 
@@ -57,8 +63,7 @@ app.post('/v1/controle-jogos/jogo', cors(), bodyParserJSON, async function(reque
 
 })
 
-
-//controle para retornar uma lista de jogos
+//endpoint para retornar uma lista de jogos
 app.get('/v1/controle-jogos/jogo', cors(), async function(request, response){
         //chama a função para listar os jogos
         let resultJogo = await controllerJgo.listarJogo()
@@ -81,6 +86,7 @@ app.get('/v1/controle-jogos/jogo/:id', cors(), async function(request, response)
 })
 
 
+
 //endpoint para ecluir um jogo com base no seu id
 app.delete('/v1/controle-jogos/deletjogo/:id', cors(), async function(request, response){
         let idJogo = request.params.id
@@ -89,6 +95,9 @@ app.delete('/v1/controle-jogos/deletjogo/:id', cors(), async function(request, r
         response.status(resultJogo.status_code)
         response.json(resultJogo)
 })
+
+
+
 
 //end point para atualizar o jogo
 app.put('/v1/controle-jogos/jogo/:id', cors(), bodyParserJSON, async function(request, response){ //post e put é necessario o bodyparserJson, pois sao os 2 verbos que chegam dados pelo corpo
@@ -106,9 +115,17 @@ app.put('/v1/controle-jogos/jogo/:id', cors(), bodyParserJSON, async function(re
         response.json(resultJogo)
 })
 
+
+
+
+
+
+
+
 /*****************************************************************
  * Tabela de sexo
 *****************************************************************/
+
 //end point para inserir um novo sexo no banco de dados
 app.post('/v1/controle-jogos/sexo', cors(), bodyParserJSON, async function(request, response){
         //recebe o content type para validar o tipo de dados da requisição
@@ -132,7 +149,7 @@ app.get('/v1/controle-jogos/sexos', cors(), async function(request, response){
 })
 
 //endpoint parar retornar um sexo com base no seu id
-app.get('/v1/controle-jogos/sexo:id', cors(), async function(request, response){
+app.get('/v1/controle-jogos/sexo/:id', cors(), async function(request, response){
         //recebe o id do sexo na requisição
         let idSexo = request.params.id
         let resultSexo = await controllerSexo.buscarSexo(idSexo)
@@ -141,16 +158,120 @@ app.get('/v1/controle-jogos/sexo:id', cors(), async function(request, response){
         response.json(resultSexo)
 })
 
-//end point para deletar um jogo com base no seu id
+//end point para deletar um sexo com base no seu id
 app.delete('/v1/controle-jogos/deletsexo/:id', cors(), async function(request, response){
         let idSexo = request.params.id
         let resultSexo = await controllerSexo.deleteSexo(idSexo)
 
-        response.status(resultJogo.status_code)
+        response.status(resultSexo.status_code)
         response.json(resultSexo)
 })
 
 
+//endpoint para atualizar um sexo
+app.put('/v1/controle-jogos/sexo/:id', cors(), bodyParserJSON, async function(request, response){
+        let contentType = request.headers['content-type']
+        let idSexo = request.params.id
+        let dadosBody = request.body
+
+        let resultSexo = await controllerSexo.updateSexo(dadosBody, idSexo, contentType)
+
+        response.status(resultSexo.status_code)
+        response.json(resultSexo)
+})
+
+
+
+/*****************************************************************
+ * Tabela de categoria
+*****************************************************************/
+
+//end point para inserir uma nova categoria no banco de dados
+app.post('/v1/controle-jogos/categoria', cors(), bodyParserJSON, async function(request, response){
+
+        let contentType = request.headers['content-type']
+        let dadosBody = request.body
+        let resultCategoria = await controllerCategoria.insertCategoria(dadosBody, contentType)
+        response.status(resultCategoria.status_code)
+        response.json(resultCategoria)
+})
+
+
+//endpoint para retornar uma lista de categorias
+app.get('/v1/controle-jogos/categorias', cors(), async function(request, response){
+        let resultCategorias = await controllerCategoria.listarCategorias()
+
+        response.status(resultCategorias.status_code)
+        response.json(resultCategorias)
+})
+
+//endponit para retornar uma categoria com base no seu id
+
+app.get('/v1/controle-jogos/categoria/:id', cors(), async function(request, response){
+        let idCategoria = request.params.id
+        let resultCategoria = await controllerCategoria.bucarCategoria(idCategoria)
+
+        response.status(resultCategoria.status_code)
+        response.json(resultCategoria)
+})
+
+//endpoint para atualizar uma categoria
+app.put('/v1/controle-jogos/categoria/:id', cors(), bodyParserJSON, async function(request, response){
+        let contentType = request.headers['content-type']
+        let idCategoria = request.params.id
+        let dadosBody = request.body
+
+        let resultCategoria = await controllerCategoria.atualizarCategoria(dadosBody, idCategoria, contentType)
+
+        response.status(resultCategoria.status_code)
+        response.json(resultCategoria)
+})
+
+//endpoint para excluir uma categoria com base no seu id
+app.delete('/v1/controle-jogos/deletecategoria/:id', cors(), async function(request, response){
+        let idCategoria = request.params.id
+        let resultCategoria = await controllerCategoria.excluirCategoria(idCategoria)
+
+        response.status(resultCategoria.status_code)
+        response.json(resultCategoria)
+})
+
+
+
+
+/*****************************************************************
+ * Tabela de plataforma
+*****************************************************************/
+
+
+//endpoint para retornar uma lista de plataformas
+
+
+//endpoint para inserir uma plataforma no banco
+app.post('/v1/controle-jogos/plataforma', cors(), bodyParserJSON, async function(request, response){
+        let contentType = request.headers['content-type']
+        let dadosBody = request.body
+        let resulPlataforma = await controllerPlataforma.insertPlataforma(dadosBody, contentType)
+        response.status(resulPlataforma.status_code)
+        response.json(resulPlataforma)
+})
+
+//endpoint para listar todas as plataformas
+app.get('/v1/controle-jogos/plataforma', cors(), async function(request, response){
+        let resulPlataforma = await controllerPlataforma.listarPlataformas()
+
+        response.status(resulPlataforma.status_code)
+        response.json(resulPlataforma)
+})
+
+//ENDPOINT PARAR LISTAR UMA PLATAFORMA COM BASE NO SEU ID
+app.get('/v1/controle-jogos/plataforma/:id', cors(), async function(request, response){
+        let idPlataforma = request.params.id
+        let resultPlataforma = await controllerPlataforma.buscarPlataforma(idPlataforma)
+
+        response.status(resultPlataforma.status_code)
+        response.json(resultPlataforma)
+})
 
 
 

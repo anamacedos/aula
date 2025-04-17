@@ -8,10 +8,23 @@ categoria (criada)
 
 tabelas que já pode fazer o crud
 sexo 
-	insert-> inserir um novo sexo no banco (voltando html no postman)
-	get -> listar todos os sexos (necessário concertar o insert para testar)
-	get -> listar sexo atarves do id (já fiz o dao, parei na controler)
-plataforma (criada)
-idioma (criada)
-classificação (criada)
+	post -> inserir um novo sexo no banco (CHECK)
+	get -> listar todos os sexos (CHECK)
+	get -> listar sexo atarves do id (CHECK)
+	delet -> deletar sexo (ERROR NOT FOUNDED)
+	put -> atualizar sexo (404 EROOR INTERNAL SERVER CONTROLLER)
 categoria 
+	post -> inserir uma noca categoria no banco (CHECK)
+	get -> listar todas as categorias (CHECK)
+	get -> listar categoria atraves do id (CHECK)
+	put -> atualizar sexo (CHECK)
+	delet -> deletar sexo (CHECK)
+	
+plataforma
+	post -> inserir uma noca categoria no banco (CHECK)
+	get -> listar todas as categorias (voltando html)
+	get -> listar categoria atraves do id (CHECK)
+	put -> atualizar sexo (apenas DAO concluida)
+	delet -> deletar sexo ()
+idioma 
+classificação 
