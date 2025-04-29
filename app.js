@@ -24,6 +24,8 @@ const controllerJgo = require("./controller/jogo/controllerJogo.js")
 const controllerSexo = require('./controller/sexo/controllerSexo.js')
 const controllerCategoria = require('./controller/categoria/controllerCategoria.js')
 const controllerPlataforma = require('./controller/plataforma/controllerplataforma.js')
+const controllerIdioma = require('./controller/idioma/controllerIdioma.js')
+const controllerClassificacaoEtaria = require('./controller/classificacaoEtaria/controllerClassificacaoEtaria.js')
 
 //estaelecendo o formato de dados que deverá chegar no body da requisição (post ou put)
 const bodyParserJSON = bodyParser.json()
@@ -63,6 +65,9 @@ app.post('/v1/controle-jogos/jogo', cors(), bodyParserJSON, async function(reque
 
 })
 
+
+
+
 //endpoint para retornar uma lista de jogos
 app.get('/v1/controle-jogos/jogo', cors(), async function(request, response){
         //chama a função para listar os jogos
@@ -72,6 +77,7 @@ app.get('/v1/controle-jogos/jogo', cors(), async function(request, response){
         response.json(resultJogo)
 
 })
+
 
 
 
@@ -87,6 +93,8 @@ app.get('/v1/controle-jogos/jogo/:id', cors(), async function(request, response)
 
 
 
+
+
 //endpoint para ecluir um jogo com base no seu id
 app.delete('/v1/controle-jogos/deletjogo/:id', cors(), async function(request, response){
         let idJogo = request.params.id
@@ -96,6 +104,14 @@ app.delete('/v1/controle-jogos/deletjogo/:id', cors(), async function(request, r
         response.json(resultJogo)
 })
 
+//endponit para excluir um idioma pelo id
+app.delete('/v1/controle-jogos/deletidioma/:id', cors(), async function(request, response){
+        let idIdioma = request.params.id
+        let resultIdioma = await controllerIdioma.excluirIdioma(idIdioma)
+
+        response.status(resultIdioma.status_code)
+        response.json(resultIdioma)
+})
 
 
 
@@ -114,8 +130,6 @@ app.put('/v1/controle-jogos/jogo/:id', cors(), bodyParserJSON, async function(re
         response.status(resultJogo.status_code)
         response.json(resultJogo)
 })
-
-
 
 
 
@@ -197,6 +211,8 @@ app.post('/v1/controle-jogos/categoria', cors(), bodyParserJSON, async function(
 })
 
 
+
+
 //endpoint para retornar uma lista de categorias
 app.get('/v1/controle-jogos/categorias', cors(), async function(request, response){
         let resultCategorias = await controllerCategoria.listarCategorias()
@@ -258,10 +274,9 @@ app.post('/v1/controle-jogos/plataforma', cors(), bodyParserJSON, async function
 
 //endpoint para listar todas as plataformas
 app.get('/v1/controle-jogos/plataforma', cors(), async function(request, response){
-        let resulPlataforma = await controllerPlataforma.listarPlataformas()
-
-        response.status(resulPlataforma.status_code)
-        response.json(resulPlataforma)
+        let resultPlataforma = await controllerPlataforma.listarPlataformas()
+        response.status(resultPlataforma.status_code)
+        response.json(resultPlataforma)
 })
 
 //ENDPOINT PARAR LISTAR UMA PLATAFORMA COM BASE NO SEU ID
@@ -274,6 +289,132 @@ app.get('/v1/controle-jogos/plataforma/:id', cors(), async function(request, res
 })
 
 
+//endpoint para atualizar uma plataforma
+app.put('/v1/controle-jogos/plataforma/:id', cors(), bodyParserJSON, async function(request, response){
+        let contentType = request.headers['content-type']
+        let idPlataforma = request.params.id
+        let dadosBody = request.body
+
+        let resulPlataforma = await controllerPlataforma.atualizarPlataforma(dadosBody, idPlataforma, contentType)
+
+        response.status(resulPlataforma.status_code)
+        response.json(resulPlataforma)
+})
+
+
+
+//endpoint para excluir uma plataforma com base no seu id
+app.delete('/v1/controle-jogos/deletplataforma/:id', cors(), async function(request, response){
+        let idPlataforma = request.params.id
+        let resultPlataforma = await controllerPlataforma.excluirPlataforma(idPlataforma)
+
+        response.status(resultPlataforma.status_code)
+        response.json(resultPlataforma)
+})
+
+
+/*****************************************************************
+ * Tabela de idioma
+*****************************************************************/
+
+
+//endpoint para inserir um idioma no banco
+app.post('/v1/controle-jogos/idioma', cors(), bodyParserJSON, async function(request, response){
+        let contentType = request.headers['content-type']
+        let dadosBody = request.body
+        let resultIdioma = await controllerIdioma.insertIdioma(dadosBody, contentType)
+
+        response.status(resultIdioma.status_code)
+        response.json(resultIdioma)
+})
+
+//Endpoint para retornar uma lista de idiomas
+
+app.get('/v1/controle-jogos/idioma', cors(), async function(request, response){
+        let resultIdioma = await controllerIdioma.listarIdioma()
+
+        response.status(resultIdioma.status_code)
+        response.json(resultIdioma)
+})
+
+//endpoint para retornar um idioma com base no seu id
+app.get('/v1/controle-jogos/idioma/:id', cors(), async function(request, response){
+        //recebe o id do jogo na requisição
+        let idIdioma = request.params.id
+        let resultIdioma = await controllerIdioma.buscarIdioma(idIdioma)
+
+        response.status(resultIdioma.status_code)
+        response.json(resultIdioma)
+})
+
+//endpoint para atualizar um idioma
+app.put('/v1/controle-jogos/idioma/:id', cors(), bodyParserJSON, async function(request, response){
+        let contentType = request.headers['content-type']
+        //recebe o id do jogo
+        let idIdioma = request.params.id
+
+        let dadosBody = request.body 
+
+        let resultIdioma = await controllerIdioma.atualizarIdioma(dadosBody, idIdioma, contentType)
+
+        response.status(resultIdioma.status_code)
+        response.json(resultIdioma)
+})
+
+/*****************************************************************
+ * Tabela de classificação etária
+*****************************************************************/
+
+//endpoint para inserir uma classificação etária
+app.post('/v1/controle-jogos/classificacaoetaria', cors(), bodyParserJSON, async function(request, response){
+
+        let contentType = request.headers['content-type']
+        let dadosBody = request.body
+        let resultClassificacaoEtaria = await controllerClassificacaoEtaria.insertClassificacaoEtaria(dadosBody, contentType)
+        response.status(resultClassificacaoEtaria.status_code)
+        response.json(resultClassificacaoEtaria)
+})
+
+//endpoint para retornar uma lista de classificacoes etarias
+app.get('/v1/controle-jogos/classificacaoetaria', cors(), async function(request, response){
+        //chama a função para listar os jogos
+        let resultClassificacaoEtaria = await controllerClassificacaoEtaria.listarClassificacaoEtaria()
+
+        response.status(resultClassificacaoEtaria.status_code)
+        response.json(resultClassificacaoEtaria)
+
+})
+
+//endpoint para retornar uma classificacao com base no seu id
+app.get('/v1/controle-jogos/classificacaoetaria/:id', cors(), async function(request, response){
+        //recebe o id do jogo na requisição
+        let idClassificacao = request.params.id
+        let resultClassificacaoEtaria = await controllerClassificacaoEtaria.buscarClassificacaoEtaria(idClassificacao)
+
+        response.status(resultClassificacaoEtaria.status_code)
+        response.json(resultClassificacaoEtaria)
+})
+
+//end point para atualizar uma classificação etaria
+app.put('/v1/controle-jogos/classificacaoetaria/:id', cors(), bodyParserJSON, async function(request, response){
+        let contentType = request.headers['content-type']
+        let idClassificacao = request.params.id
+        let dadosBody = request.body
+
+        let resultClassificacaoEtaria= await controllerClassificacaoEtaria.atualizarClassificacaoEtaria(dadosBody, idClassificacao, contentType)
+
+        response.status(resultClassificacaoEtaria.status_code)
+        response.json(resultClassificacaoEtaria)
+})
+
+//endpoint para excluir uma classificacao etaria pelo id
+app.delete('/v1/controle-jogos/deletclassificacaoetaria/:id', cors(), async function(request, response){
+        let idClassificacao = request.params.id
+        let resultClassificacaoEtaria = await controllerClassificacaoEtaria.excluirClassificacaoEtaria(idClassificacao)
+
+        response.status(resultClassificacaoEtaria.status_code)
+        response.json(resultClassificacaoEtaria)
+})
 
 app.listen(8080, function(){
         console.log('API aguardando requisições')

@@ -33,15 +33,15 @@ const insertPlataforma = async function(plataforma) {
 //Função para retornar uma lista de plataformas
 const selectAllPlataforma = async function(){
     try {
-        let sql = `select * from tbl_plataforma by id desc`
+        let sql = `select * from tbl_plataforma order by id desc`
         let result = await prisma.$queryRawUnsafe(sql)
-
+        console.log(result)
         if(result)
             return result
         else 
             return false
     } catch (error) {
-        
+        return false
     }
 }
 
@@ -63,7 +63,7 @@ const selectByIdPlataforma = async function(id){
 //Função para atualizar uma plataforma
 const updatePlataforma = async function(plataforma){
     try {
-        let sql = `update tbl_plataforma set plataforma = '${plataforma}' where id = '${id}'`
+        let sql = `update tbl_plataforma set plataforma = '${plataforma.plataforma}' where id = '${plataforma.id}'`
         let result = await prisma.$executeRawUnsafe(sql)
 
         if(result)
@@ -77,9 +77,26 @@ const updatePlataforma = async function(plataforma){
     }
 }
 
+//Função para excluir uma plataforma existente do bd
+const deletePlataforma = async function(id){
+    try {
+        let sql = `delete from tbl_plataforma where id = ${id}`
+        let result = await prisma.$executeRawUnsafe(sql)
+
+        if (result)
+            return true
+        else
+            return false
+    } catch (error) {
+        return false
+    }
+}
+
+
 module.exports = {
     insertPlataforma,
     selectAllPlataforma,
     selectByIdPlataforma,
-    updatePlataforma
+    updatePlataforma,
+    deletePlataforma
 }

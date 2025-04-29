@@ -88,7 +88,7 @@ const atualizarJogo = async function (jogo, id, contentType) {
 const excluirJogo = async function (id) {
     try { 
         if(id == "" || id == undefined || id == null || isNaN(id) || id<=0){
-        return MESSAGE.ERROR_REQUIRED_FIELDS
+            return MESSAGE.ERROR_REQUIRED_FIELDS
         }else{
             let resultJogo = await jogoDAO.selectByIdJogo(parseInt(id))
 
