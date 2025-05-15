@@ -23,7 +23,9 @@ const insertJogo = async function(jogo){
                                     tamanho,
                                     descricao,
                                     foto_capa,
-                                    link
+                                    link,
+                                    id_classificacao_etaria
+
     )values(
         '${jogo.nome}',
         '${jogo.data_lancamento}',
@@ -31,14 +33,17 @@ const insertJogo = async function(jogo){
         '${jogo.tamanho}',
         '${jogo.descricao}',
         '${jogo.foto_capa}',
-        '${jogo.link}'
+        '${jogo.link}',
+        '${jogo.id_classificacao_etaria}'
     )`
+    // console.log(sql)
     //executa o script sql no banco de dados e aguarda o retorno do banco
     //so pode ter await em uma funcao se ela for async, e ela so pode ser async se ela precisa fazer uma requisicao que esta em outro servidor
     let result = await prisma.$executeRawUnsafe(sql) //enquanto o banco nao da uma devolutiva, nao passa para a proxima linha
-
+        
     if (result)
         return true
+
     else
         return false
     } catch (error) {
@@ -55,7 +60,8 @@ const updateJogo = async function (jogo) {
                                     tamanho = "${jogo.tamanho}",
                                     descricao = "${jogo.descricao}",
                                     foto_capa = "${jogo.foto_capa}",
-                                    link = "${jogo.link}"
+                                    link = "${jogo.link}",
+                                    id_classificacao_etaria = "${id_classificacao_etaria}"
                                     where id = ${jogo.id}`
         let result = await prisma.$executeRawUnsafe(sql)
         

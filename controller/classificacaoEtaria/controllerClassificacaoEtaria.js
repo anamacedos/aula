@@ -82,7 +82,7 @@ const buscarClassificacaoEtaria = async function(id){
                     //cria um objeto do tipo json para retornar a lista de jogos
                     dadosClassificacao.status = true
                     dadosClassificacao.status_code = 200
-                    dadosClassificacao.games = resultClassificacao
+                    dadosClassificacao.classificacao = resultClassificacao
                     return dadosClassificacao
                 }else{
                     return MESSAGE.ERROR_NOT_FOUND

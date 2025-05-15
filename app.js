@@ -26,6 +26,7 @@ const controllerCategoria = require('./controller/categoria/controllerCategoria.
 const controllerPlataforma = require('./controller/plataforma/controllerplataforma.js')
 const controllerIdioma = require('./controller/idioma/controllerIdioma.js')
 const controllerClassificacaoEtaria = require('./controller/classificacaoEtaria/controllerClassificacaoEtaria.js')
+const controllerEmpresa = require('./controller/empresa/controllerEmpresa.js')
 
 //estaelecendo o formato de dados que deverá chegar no body da requisição (post ou put)
 const bodyParserJSON = bodyParser.json()
@@ -80,7 +81,6 @@ app.get('/v1/controle-jogos/jogo', cors(), async function(request, response){
 
 
 
-
 //endponit para retornar um jogo com base no seu id
 app.get('/v1/controle-jogos/jogo/:id', cors(), async function(request, response){
         //recebe o id do jogo na requisição
@@ -103,6 +103,8 @@ app.delete('/v1/controle-jogos/deletjogo/:id', cors(), async function(request, r
         response.status(resultJogo.status_code)
         response.json(resultJogo)
 })
+
+
 
 //endponit para excluir um idioma pelo id
 app.delete('/v1/controle-jogos/deletidioma/:id', cors(), async function(request, response){
@@ -132,7 +134,19 @@ app.put('/v1/controle-jogos/jogo/:id', cors(), bodyParserJSON, async function(re
 })
 
 
+//Endpoint para atualizar uma empresa
+app.put('/v1/controle-jogos/empresa/:id', cors(), bodyParserJSON, async function(request, response){
+        let contentType = request.headers['content-type']
+        //recebe o id do jogo
+        let idEmpresa = request.params.id
+        //recebe os dados do jogo encaminhado do body da requisição
+        let dadosBody = request.body 
 
+        let resultEmpresa = await controllerEmpresa.atualizarEmpresa(dadosBody, idEmpresa, contentType)
+
+        response.status(resultEmpresa.status_code)
+        response.json(resultEmpresa)
+})
 
 
 
@@ -418,4 +432,47 @@ app.delete('/v1/controle-jogos/deletclassificacaoetaria/:id', cors(), async func
 
 app.listen(8080, function(){
         console.log('API aguardando requisições')
+})
+
+
+/*****************************************************************
+ * Tabela de empresa
+*****************************************************************/
+
+//End point para inserir uma nova empresa no banco de dados
+app.post('/v1/controle-jogos/empresa', cors(), bodyParserJSON, async function(request, response){
+        let contentType = request.headers['content-type']
+        let dadosBody = request.body
+        let resultEmpresa = await controllerEmpresa.insertEmpresa(dadosBody, contentType)
+
+        response.status(resultEmpresa.status_code)
+        response.json(resultEmpresa)
+})
+
+
+//end point para retornar uma lista de empresas
+app.get('/v1/controle-jogos/empresas', cors(), async function(request, response){
+        let resultEmpresa = await controllerEmpresa.listarEmpresas()
+
+        response.status(resultEmpresa.status_code)
+        response.json(resultEmpresa)
+})
+
+//endpoint para listar a empresa com base no id
+app.get('/v1/controle-jogos/empresa/:id', cors(), async function(request, response){
+        let idEmpresa = request.params.id
+        let resultEmpresa = await controllerEmpresa.buscarEmpresa(idEmpresa)
+
+        response.status(resultEmpresa.status_code)
+        response.json(resultEmpresa)
+})
+
+
+//endpoint para excluir uma empresa com base o seu id
+app.delete('/v1/controle-jogos/deletempresa/:id', cors(), async function(request, response){
+        let idEmpresa = request.params.id
+        let resultEmpresa = await controllerEmpresa.excluirEmpresa(idEmpresa)
+
+        response.status(resultEmpresa.status_code)
+        response.json(resultEmpresa)
 })
