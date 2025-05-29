@@ -105,14 +105,7 @@ app.delete('/v1/controle-jogos/deletjogo/:id', cors(), async function(request, r
         response.json(resultJogo)
 })
 
-//endpoint para excluir um usuario com base no seu id
-app.delete('/v1/controle-jogos/deletusuario/:id', cors(), async function(request, response){
-        let idUsuario = request.params.id
-        let resultUsuario = await controllerUsuario.excluirUsuario(idUsuario)
 
-        response.status(resultUsuario.status_code)
-        response.json(resultUsuario)
-})
 
 
 
@@ -543,6 +536,15 @@ app.put('/v1/controle-jogos/usuario/:id', cors(), bodyParserJSON, async function
         let dadosBody = request.body 
 
         let resultUsuario = await controllerUsuario.atualizarUsuario(dadosBody, idUsuario, contentType)
+
+        response.status(resultUsuario.status_code)
+        response.json(resultUsuario)
+})
+
+//endpoint para excluir um usuario com base no seu id
+app.delete('/v1/controle-jogos/deletusuario/:id', cors(), async function(request, response){
+        let idUsuario = request.params.id
+        let resultUsuario = await controllerUsuario.excluirUsuario(idUsuario)
 
         response.status(resultUsuario.status_code)
         response.json(resultUsuario)

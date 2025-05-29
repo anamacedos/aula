@@ -61,7 +61,7 @@ const atualizarUsuario = async function (usuario, id, contentType) {
                     else
                         return MESSAGE.ERROR_INTERNAL_SERVER_MODEL
 
-                }else if(resultJogo.status_code == 404){
+                }else if(result.status_code == 404){
                     return MESSAGE.ERROR_NOT_FOUND
                 }else{
                     return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
