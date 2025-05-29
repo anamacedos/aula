@@ -1,5 +1,11 @@
 create database db_controle_jogos_bb;
+show databases;
 use db_controle_jogos_bb;
+
+
+
+drop table tbl_jogo;
+
 create table tbl_jogo(
 	id int not null primary key auto_increment,
     nome varchar(80) not null,
@@ -8,14 +14,10 @@ create table tbl_jogo(
     tamanho varchar(10),
     descricao text,
     foto_capa varchar(200),
-    link varchar(200)
+    link varchar(200),
+    id_classificacao_etaria int not null,
+    constraint id_classificacao_etaria foreign key (id_classificacao_etaria) references tbl_classificacao_etaria(id)
 );
-
-alter table tbl_jogo
-add id_classificacao_etaria int;
-
-alter table tbl_jogo
-add foreign key (id_classificacao_etaria) references tbl_classificacao_etaria(id);
 
 create table tbl_sexo(
 	id int not null primary key auto_increment,
@@ -66,11 +68,57 @@ create table tbl_usuario(
     bio varchar(500),
     foto_perfil varchar(100),
     id_sexo int not null,
-    constraint fk_sexo foreign key (id_sexo) references tbl_sexo(id)
+    constraint fk_sexo foreign key (id_sexo) references tbl_sexo(id),
+    id_idioma int not null,
+    constraint fk_idioma foreign key(id_idioma) references tbl_idioma(id)
 		
+);
+
+
+create table tbl_jogo_empresa(
+	id int not null primary key auto_increment,
+    id_jogo int not null,
+    constraint fk_jogo foreign key(id_jogo) references tbl_jogo(id),
+    id_empresa int not null,
+    constraint fk_empresa foreign key(id_empresa) references tbl_empresa(id)
+);
+
+create table tbl_jogo_categoria(
+	id int not null primary key auto_increment,
+    id_jogo int not null,
+    constraint fk_jogo_categoria foreign key(id_jogo) references tbl_jogo(id),
+    id_categoria int not null,
+    constraint fk_categoria foreign key(id_categoria) references tbl_categoria(id)
+);
+
+create table tbl_jogo_plataforma(
+	id int not null primary key auto_increment,
+    id_jogo int not null,
+    constraint fk_jogo_plataforma foreign key(id_jogo) references tbl_jogo(id),
+    id_plataforma int not null,
+    constraint fk_plataforma foreign key(id_plataforma) references tbl_plataforma(id)
+);
+
+create table tbl_jogo_idioma(
+	id int not null primary key auto_increment,
+    id_jogo int not null,
+    constraint fk_jogo_idioma foreign key(id_jogo) references tbl_jogo(id),
+    id_idioma int not null,
+    constraint fk_idioma_jogo foreign key(id_idioma) references tbl_idioma(id)
+);
+
+create table tbl_biblioteca(
+	id int not null primary key auto_increment,
+    id_jogo int not null,
+    constraint fk_jogo_biblioteca foreign key(id_jogo) references tbl_jogo(id),
+    id_usuario int not null,
+    constraint fk_usuario_biblioteca foreign key(id_usuario) references tbl_usuario(id),
+    data_compra timestamp default current_timestamp
 );
 
 show tables;
 desc tbl_jogo;
 
 select * from tbl_plataforma order by id desc;
+
+

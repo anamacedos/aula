@@ -10,7 +10,7 @@
         body-parser         npm install body-parser --save
 ****** Para configurar e instalar o acesso ao banco de dados precisamos:
         prisma              npm install prisma --save -> faz a conexao com o banco
-        prisma/client       npm install @prisma/cliente --save -> Executa Scripts no Banco
+        prisma/client       npm install @prisma/client --save -> Executa Scripts no Banco
 ****** Após a instalação do prisma e prisma client, devemos:
         npx prisma init (inicializar o prisma no projeto  )
 ****** Para realizar o sincronismo do prisma com o banco de dados, devemos executar o seguinte comando:
@@ -27,6 +27,7 @@ const controllerPlataforma = require('./controller/plataforma/controllerplatafor
 const controllerIdioma = require('./controller/idioma/controllerIdioma.js')
 const controllerClassificacaoEtaria = require('./controller/classificacaoEtaria/controllerClassificacaoEtaria.js')
 const controllerEmpresa = require('./controller/empresa/controllerEmpresa.js')
+const controllerUsuario = require('./controller/usuario/controllerUsuario.js')
 
 //estaelecendo o formato de dados que deverá chegar no body da requisição (post ou put)
 const bodyParserJSON = bodyParser.json()
@@ -95,13 +96,22 @@ app.get('/v1/controle-jogos/jogo/:id', cors(), async function(request, response)
 
 
 
-//endpoint para ecluir um jogo com base no seu id
+//endpoint para excluir um jogo com base no seu id
 app.delete('/v1/controle-jogos/deletjogo/:id', cors(), async function(request, response){
         let idJogo = request.params.id
         let resultJogo = await controllerJgo.excluirJogo(idJogo)
 
         response.status(resultJogo.status_code)
         response.json(resultJogo)
+})
+
+//endpoint para excluir um usuario com base no seu id
+app.delete('/v1/controle-jogos/deletusuario/:id', cors(), async function(request, response){
+        let idUsuario = request.params.id
+        let resultUsuario = await controllerUsuario.excluirUsuario(idUsuario)
+
+        response.status(resultUsuario.status_code)
+        response.json(resultUsuario)
 })
 
 
@@ -132,6 +142,10 @@ app.put('/v1/controle-jogos/jogo/:id', cors(), bodyParserJSON, async function(re
         response.status(resultJogo.status_code)
         response.json(resultJogo)
 })
+
+
+
+
 
 
 //Endpoint para atualizar uma empresa
@@ -430,9 +444,7 @@ app.delete('/v1/controle-jogos/deletclassificacaoetaria/:id', cors(), async func
         response.json(resultClassificacaoEtaria)
 })
 
-app.listen(8080, function(){
-        console.log('API aguardando requisições')
-})
+
 
 
 /*****************************************************************
@@ -475,4 +487,67 @@ app.delete('/v1/controle-jogos/deletempresa/:id', cors(), async function(request
 
         response.status(resultEmpresa.status_code)
         response.json(resultEmpresa)
+})
+
+
+/*****************************************************************
+ * Tabela de usuario
+*****************************************************************/
+
+//end ponit para inserir um usuario no banco de dados
+app.post('/v1/controle-jogos/usuario', cors(), bodyParserJSON, async function(request, response){
+
+        //console.log(request.headers) //printa o cabeçalho (header), com as informações da requisição, como quem pediu e também o formato da requisição (content-type)
+
+        //recebe o content type para validar o tipo de dados da requisição
+        let contentType = request.headers['content-type']
+
+        //recebe o conteudos do body da requisição
+        let dadosBody = request.body
+
+        //Ecaminhando os dados da requisição para controller inserir no BD
+        let resultUsuario = await controllerUsuario.insertUsuario(dadosBody, contentType)
+
+        response.status(resultUsuario.status_code)
+        response.json(resultUsuario)   
+})
+
+//endpoint para retornar uma lista de usuários 
+app.get('/v1/controle-jogos/usuario', cors(), async function(request, response){
+        //chama a função para listar os jogos
+        let resultUsuario = await controllerUsuario.listarUsuarios()
+
+        response.status(resultUsuario.status_code)
+        response.json(resultUsuario)
+
+})
+
+//endpoint para retornar um usuario com base no seu id
+app.get('/v1/controle-jogos/usuario/:id', cors(), async function(request, response){
+        //recebe o id do jogo na requisição
+        let idUsuario = request.params.id
+        let resultUsuario = await controllerUsuario.buscarUsuario(idUsuario)
+
+        response.status(resultUsuario.status_code)
+        response.json(resultUsuario)
+})
+
+//end point para atualizar um usuario com base no seu id
+app.put('/v1/controle-jogos/usuario/:id', cors(), bodyParserJSON, async function(request, response){ //post e put é necessario o bodyparserJson, pois sao os 2 verbos que chegam dados pelo corpo
+
+        //recebe o content type da requisição
+        let contentType = request.headers['content-type']
+        //recebe o id do jogo
+        let idUsuario = request.params.id
+        //recebe os dados do jogo encaminhado do body da requisição
+        let dadosBody = request.body 
+
+        let resultUsuario = await controllerUsuario.atualizarUsuario(dadosBody, idUsuario, contentType)
+
+        response.status(resultUsuario.status_code)
+        response.json(resultUsuario)
+})
+
+app.listen(8080, function(){
+        console.log('API aguardando requisições')
 })

@@ -61,7 +61,9 @@ const atualizarJogo = async function (jogo, id, contentType) {
                 return MESSAGE.ERROR_REQUIRED_FIELDS //400
             }else{
                 //validar se o id existe no banco de dados
-                let resultJogo = await buscarJogo(parseInt(id))
+                let resultJogo = await jogoDAO.updateJogo(parseInt(id))
+                console.log(resultJogo.status_code);
+                
                 if(resultJogo.status_code == 200){
                     //adiciona um atributo id no json para encaminhar o id da requisição
                     jogo.id = parseInt(id)
